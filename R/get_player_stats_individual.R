@@ -100,7 +100,7 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
     
     return(all_data)}
   
-  player_stats_individual <- purrr::pmap_dfr(..., purrr::possibly(.get_player_stats_individual, otherwise = NULL))
+  player_stats_individual <- purrr::pmap_dfr(..., elite::persistently(.get_player_stats_individual, max_attempts = 10))
 
   mydata <- player_stats_individual %>% 
     bind_cols(...) %>%

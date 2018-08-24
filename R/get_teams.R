@@ -73,7 +73,7 @@ get_teams <- function(.league, .season, .progress = TRUE, ...) {
     
     return(all_data)}
   
-  league_team_data <- purrr::map2_dfr(mydata[[".league"]], mydata[[".season"]], purrr::possibly(.get_teams, otherwise = NULL))
+  league_team_data <- purrr::map2_dfr(mydata[[".league"]], mydata[[".season"]], elite::persistently(.get_teams, max_attempts = 10))
 
   return(league_team_data)
   

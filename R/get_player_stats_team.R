@@ -74,7 +74,7 @@ get_player_stats_team <- function(..., .progress = TRUE) {
     
     return(all_data)}
 
-  player_stats_team <- purrr::pmap_dfr(..., purrr::possibly(.get_player_stats_team, otherwise = NULL))
+  player_stats_team <- purrr::pmap_dfr(..., elite::persistently(.get_player_stats_team, max_attempts = 10))
   
   return(player_stats_team)
   
