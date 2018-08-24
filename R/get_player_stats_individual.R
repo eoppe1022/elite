@@ -84,7 +84,7 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
       mutate(season_short_ = as.numeric(stringr::str_split(season_, "-", simplify = TRUE, n = 2)[,1]) + 1) %>%
       mutate(birthday = lubridate::as_date(vitals[["birthday"]])) %>%
       mutate(draft_eligibility_date_ = lubridate::as_date(stringr::str_c(as.character(season_short_), "09-15", sep = "-"))) %>%
-      mutate(age_ = get_years_difference(birthday, draft_eligibility_date_)) %>%
+      mutate(age_ = elite::get_years_difference(birthday, draft_eligibility_date_)) %>%
       mutate_all(stringr::str_squish) %>%
       mutate_all(as.character) %>%      
       mutate_all(~na_if(., "")) %>%
@@ -106,7 +106,7 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
     bind_cols(...) %>%
     mutate(season_short = as.numeric(stringr::str_split(season, "-", simplify = TRUE, n = 2)[,1]) + 1) %>%
     mutate(draft_eligibility_date = lubridate::as_date(stringr::str_c(as.character(season_short), "09-15", sep = "-"))) %>%
-    mutate(age = get_years_difference(lubridate::as_date(birthday), draft_eligibility_date)) %>%
+    mutate(age = elite::get_years_difference(lubridate::as_date(birthday), draft_eligibility_date)) %>%
     select(name, team, league, position, shot_handedness, birth_place, birth_country, birthday, height, weight, season, season_short, age, games_played, goals, assists, points, penalty_minutes, plus_minus, games_played_playoffs, goals_playoffs, assists_playoffs, points_playoffs, penalty_minutes_playoffs, plus_minus_playoffs, player_url, team_url, name_, position_, player_url_, player_statistics)
   
   if (.strip_redundancy) {mydata <- mydata %>% select(-c(name_, position_, player_url_))}

@@ -18,7 +18,7 @@ get_years_difference <- function(from, to) {
   to <- lubridate::as_date(to)
   from <- lubridate::as_date(from)
   
-  age <- from%--%to / lubridate::years(1)
+  age <- lubridate::`%--%`(from, to) / lubridate::years(1)
   
   return(age)
   
