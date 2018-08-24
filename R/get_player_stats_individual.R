@@ -37,7 +37,7 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
   
   if (.progress) {
     
-    pb <- progress::progress_bar$new(format = "\nget_player_stats_individual() \n\n[:bar] :percent eta: :eta\n\n", clear = FALSE, total = nrow(...), width = 60, show_after = 0) 
+    pb <- progress::progress_bar$new(format = "get_player_stats_individual() [:bar] :percent eta: :eta", clear = FALSE, total = nrow(...), show_after = 0) 
     
     pb$tick(0)}
   

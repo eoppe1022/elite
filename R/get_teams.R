@@ -29,7 +29,7 @@ get_teams <- function(.league, .season, .progress = TRUE, ...) {
   
   if (.progress) {
     
-    pb <- progress::progress_bar$new(format = "\nget_teams() \n\n[:bar] :percent eta: :eta\n\n", clear = FALSE, total = nrow(mydata), width = 60, show_after = 0) 
+    pb <- progress::progress_bar$new(format = "get_teams() [:bar] :percent eta: :eta", clear = FALSE, total = nrow(mydata), show_after = 0) 
     
     pb$tick(0)}
   
