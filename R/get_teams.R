@@ -1,8 +1,10 @@
+#' Gets teams and team URLs for specified league and season
+#' 
 #' Returns a data frame of teams and their URLs for user supplied leagues & seasons
 #' 
 #' @param .league Leagues from which the user wants to scrape data
-#' @param .season Seasons for which the user wants to scrape data. Must be of the form "2017-2018", "1964-1965", etc.
-#' @param .progress Sets a Progress Bar. Defaults to FALSE.
+#' @param .season Seasons for which the user wants to scrape data. Must be of the form `2017-2018`, `1964-1965`, etc.
+#' @param .progress Sets a Progress Bar. Defaults to `TRUE`.
 #' @param ... Allows the user to supply other information to the function. If you don't know what this means, then don't worry about it.
 #' @examples 
 #' get_teams("ohl", "2012-2013")
@@ -12,7 +14,7 @@
 #' @export
 #' @import dplyr
 #' 
-get_teams <- function(.league, .season, .progress = FALSE, ...) {
+get_teams <- function(.league, .season, .progress = TRUE, ...) {
   
   leagues <- .league %>% 
     as_tibble() %>% 
@@ -25,13 +27,15 @@ get_teams <- function(.league, .season, .progress = FALSE, ...) {
   
   mydata <- tidyr::crossing(leagues, seasons)
   
-  if (.progress) {progress_bar <- progress_estimated(nrow(mydata), min_time = 0)}
+  if (.progress) {
+    
+    pb <- progress::progress_bar$new(format = "get_teams() [:bar] :percent eta: :eta", clear = FALSE, total = nrow(mydata), width = 60, show_after = 0) 
+    
+    pb$tick(0)}
   
-  league_team_data <- purrr::map2_dfr(mydata[[".league"]], mydata[[".season"]], function(.league, .season, ...) {
+  .get_teams <- function(.league, .season, ...) {
     
-    if (.progress) {progress_bar$tick()$print()}
-    
-    seq(5, 10, by = 0.001) %>%
+    seq(30, 35, by = 0.001) %>%
       sample(1) %>%
       Sys.sleep()
     
@@ -65,10 +69,12 @@ get_teams <- function(.league, .season, .progress = FALSE, ...) {
       mutate(league = league) %>%
       mutate(season = season)
     
-    return(all_data)
+    if (.progress) {pb$tick()}
     
-  })
+    return(all_data)}
   
+  league_team_data <- purrr::map2_dfr(mydata[[".league"]], mydata[[".season"]], purrr::possibly(.get_teams, otherwise = NULL))
+
   return(league_team_data)
   
 }

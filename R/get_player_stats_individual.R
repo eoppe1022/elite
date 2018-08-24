@@ -1,8 +1,10 @@
+#' Gets bio information and career statistics for specified player
+#' 
 #' Returns a data frame of players, their bio information (age, birth place, etc.), and career statistics for user supplied player URLs and names. 
 #' 
-#' @param ... Function requires a "player_url", "name." Additional data may be supplied. All of this information comes directly from "get_player_stats_team()" and "get_teams()", if desired.
-#' @param .progress Sets a Progress Bar. Defaults to TRUE
-#' @param .strip_redundancy Removes variables "name_", "player_url_", and "position_", as they're the same as "name", "player_url", and "position." Defaults to TRUE.
+#' @param ... Function requires a `player_url`, `name.` Additional data may be supplied. All of this information comes directly from `get_player_stats_team()` and `get_teams()`, if desired.
+#' @param .progress Sets a Progress Bar. Defaults to `TRUE`.
+#' @param .strip_redundancy Removes variables `name_`, `player_url_`, and `position_`, as they're the same as `name`, `player_url`, and `position.` Defaults to `TRUE`.
 #' @examples 
 #' 
 #' # The function works in conjunction with get_teams() and get_player_stats_team()
@@ -21,18 +23,27 @@
 #'   get_player_stats_team() %>%
 #'   get_player_stats_individual()
 #'   
+#' # Once you have your data, use tidyr::unnest() to view players' career statistics
+#' get_teams("ncaa iii", "2014-2015") %>%
+#'   filter(team == "Hamilton College") %>%
+#'   get_player_stats_team() %>%
+#'   get_player_stats_individual() %>%
+#'   tidyr::unnest(player_statistics)
+#'   
 #' @export
 #' @import dplyr
 #' 
 get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy = TRUE) {
   
-  if (.progress) {progress_bar <- progress_estimated(nrow(...), min_time = 0)}
+  if (.progress) {
+    
+    pb <- progress::progress_bar$new(format = "get_player_stats_individual() [:bar] :percent eta: :eta", clear = FALSE, total = nrow(...), width = 60, show_after = 0) 
+    
+    pb$tick(0)}
   
-  player_stats_individual <- purrr::pmap_dfr(..., function(player_url, name, ...) {
+  .get_player_stats_individual <- function(player_url, name, ...) {
     
-    if (.progress) {progress_bar$tick()$print()}
-    
-    seq(5, 10, by = 0.001) %>%
+    seq(30, 35, by = 0.001) %>%
       sample(1) %>%
       Sys.sleep()
     
@@ -85,10 +96,12 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
       bind_cols(player_stats) %>% 
       rename(player_statistics = data)
     
-    return(all_data)
+    if (.progress) {pb$tick()}
     
-  })
+    return(all_data)}
   
+  player_stats_individual <- purrr::pmap_dfr(..., purrr::possibly(.get_player_stats_individual, otherwise = NULL))
+
   mydata <- player_stats_individual %>% 
     bind_cols(...) %>%
     mutate(season_short = as.numeric(stringr::str_split(season, "-", simplify = TRUE, n = 2)[,1]) + 1) %>%

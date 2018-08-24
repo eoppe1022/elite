@@ -1,7 +1,9 @@
+#' Gets players' stats and URLs for specified team
+#' 
 #' Returns a data frame of players' stats and player URLs for user supplied teams & seasons
 #'
-#' @param ... Function requires a "team_url", "team_name", "league", and "season." Additional data may be supplied. All of this information comes directly from "get_teams()", if desired.
-#' @param .progress Sets a Progress Bar. Defaults to FALSE.
+#' @param ... Function requires a `team_url`, `team_name`, `league`, and `season.` Additional data may be supplied. All of this information comes directly from `get_teams()`, if desired.
+#' @param .progress Sets a Progress Bar. Defaults to `TRUE`.
 #' @examples 
 #' 
 #' # The function works in conjunction with get_teams()
@@ -20,15 +22,17 @@
 #' @export
 #' @import dplyr
 #' 
-get_player_stats_team <- function(..., .progress = FALSE) {
+get_player_stats_team <- function(..., .progress = TRUE) {
   
-  if (.progress) {progress_bar <- progress_estimated(nrow(...), min_time = 0)}
+  if (.progress) {
+    
+    pb <- progress::progress_bar$new(format = "get_player_stats_team() [:bar] :percent eta: :eta", clear = FALSE, total = nrow(...), width = 60, show_after = 0) 
+    
+    pb$tick(0)}
   
-  player_stats_team <- purrr::pmap_dfr(..., function(team_url, team_name, league, season, ...) {
+  .get_player_stats_team <- function(team_url, team_name, league, season, ...) {
     
-    if (.progress) {progress_bar$tick()$print()}
-    
-    seq(5, 10, by = 0.001) %>%
+    seq(30, 35, by = 0.001) %>%
       sample(1) %>%
       Sys.sleep()
     
@@ -66,9 +70,11 @@ get_player_stats_team <- function(..., .progress = FALSE) {
       mutate(team_url = team_url) %>%
       select(name, team, league, season, everything())
     
-    return(all_data)
+    if (.progress) {pb$tick()}
     
-  })
+    return(all_data)}
+
+  player_stats_team <- purrr::pmap_dfr(..., purrr::possibly(.get_player_stats_team, otherwise = NULL))
   
   return(player_stats_team)
   
