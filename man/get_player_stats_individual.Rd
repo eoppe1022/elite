@@ -2,17 +2,17 @@
 % Please edit documentation in R/get_player_stats_individual.R
 \name{get_player_stats_individual}
 \alias{get_player_stats_individual}
-\title{Returns a data frame of players, their bio information (age, birth place, etc.), and career statistics for user supplied player URLs and names.}
+\title{Gets bio information and career statistics for specified player}
 \usage{
 get_player_stats_individual(..., .progress = TRUE,
   .strip_redundancy = TRUE)
 }
 \arguments{
-\item{...}{Function requires a "player_url", "name." Additional data may be supplied. All of this information comes directly from "get_player_stats_team()" and "get_teams()", if desired.}
+\item{...}{Function requires a `player_url`, `name.` Additional data may be supplied. All of this information comes directly from `get_player_stats_team()` and `get_teams()`, if desired.}
 
-\item{.progress}{Sets a Progress Bar. Defaults to TRUE}
+\item{.progress}{Sets a Progress Bar. Defaults to `TRUE`.}
 
-\item{.strip_redundancy}{Removes variables "name_", "player_url_", and "position_", as they're the same as "name", "player_url", and "position." Defaults to TRUE.}
+\item{.strip_redundancy}{Removes variables `name_`, `player_url_`, and `position_`, as they're the same as `name`, `player_url`, and `position.` Defaults to `TRUE`.}
 }
 \description{
 Returns a data frame of players, their bio information (age, birth place, etc.), and career statistics for user supplied player URLs and names.
@@ -34,5 +34,12 @@ get_teams("ncaa iii", "2017-2018") \%>\%
   filter(team == "Hamilton College") \%>\%
   get_player_stats_team() \%>\%
   get_player_stats_individual()
+  
+# Once you have your data, use tidyr::unnest() to view players' career statistics
+get_teams("ncaa iii", "2014-2015") \%>\%
+  filter(team == "Hamilton College") \%>\%
+  get_player_stats_team() \%>\%
+  get_player_stats_individual() \%>\%
+  tidyr::unnest(player_statistics)
   
 }

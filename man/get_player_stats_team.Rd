@@ -2,14 +2,14 @@
 % Please edit documentation in R/get_player_stats_team.R
 \name{get_player_stats_team}
 \alias{get_player_stats_team}
-\title{Returns a data frame of players' stats and player URLs for user supplied teams & seasons}
+\title{Gets players' stats and URLs for specified team}
 \usage{
-get_player_stats_team(..., .progress = FALSE)
+get_player_stats_team(..., .progress = TRUE)
 }
 \arguments{
-\item{...}{Function requires a "team_url", "team_name", "league", and "season." Additional data may be supplied. All of this information comes directly from "get_teams()", if desired.}
+\item{...}{Function requires a `team_url`, `team_name`, `league`, and `season.` Additional data may be supplied. All of this information comes directly from `get_teams()`, if desired.}
 
-\item{.progress}{Sets a Progress Bar. Defaults to FALSE.}
+\item{.progress}{Sets a Progress Bar. Defaults to `TRUE`.}
 }
 \description{
 Returns a data frame of players' stats and player URLs for user supplied teams & seasons

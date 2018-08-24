@@ -2,14 +2,14 @@
 % Please edit documentation in R/get_years_difference.R
 \name{get_years_difference}
 \alias{get_years_difference}
-\title{Returns the exact age of a player given his birth date and some reference date}
+\title{Gets exact age}
 \usage{
 get_years_difference(from, to)
 }
 \arguments{
 \item{from}{The start date. Typically the player's birth date.}
 
-\item{to}{The reference date. For finding a player's draft eligibility, typically "2018-09-15", or whatever the year of the NHL draft.}
+\item{to}{The reference date. Used for finding a player's draft eligibility, it's typically `2018-09-15`, or whatever the year of the NHL draft is.}
 }
 \description{
 Returns the exact age of a player given his birth date and some reference date
@@ -18,6 +18,6 @@ Returns the exact age of a player given his birth date and some reference date
 get_years_difference("2000-09-15", "2018-09-15")
 
 # My birthday -- don't forget it!
-get_years_difference("1995-10-22", "2018-08-24")
+get_years_difference("1995-10-22", "2018-08-27")
 
 }

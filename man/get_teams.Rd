@@ -2,16 +2,16 @@
 % Please edit documentation in R/get_teams.R
 \name{get_teams}
 \alias{get_teams}
-\title{Returns a data frame of teams and their URLs for user supplied leagues & seasons}
+\title{Gets teams and team URLs for specified league and season}
 \usage{
-get_teams(.league, .season, .progress = FALSE, ...)
+get_teams(.league, .season, .progress = TRUE, ...)
 }
 \arguments{
 \item{.league}{Leagues from which the user wants to scrape data}
 
-\item{.season}{Seasons for which the user wants to scrape data. Must be of the form "2017-2018", "1964-1965", etc.}
+\item{.season}{Seasons for which the user wants to scrape data. Must be of the form `2017-2018`, `1964-1965`, etc.}
 
-\item{.progress}{Sets a Progress Bar. Defaults to FALSE.}
+\item{.progress}{Sets a Progress Bar. Defaults to `TRUE`.}
 
 \item{...}{Allows the user to supply other information to the function. If you don't know what this means, then don't worry about it.}
 }
