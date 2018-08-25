@@ -3,7 +3,7 @@ Title: A Package for Scraping Hockey Data from Elite Prospects
 Version: 0.1
 Authors@R: person("Evan", "Oppenheimer", email = "eoppe1022@gmail.com", role = c("aut", "cre"))
 Description: The "elite" package allows users to easily scrape data from Elite Prospects in a [fairly] tidy manner.
-Depends: R (>= 3.4.3)
+Depends: R (>= 3.1.2)
 Imports: dplyr, lubridate, magrittr, progress, purrr, rvest, stringr, tidyr, xml2
 License: CC0
 Encoding: UTF-8

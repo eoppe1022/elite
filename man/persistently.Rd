@@ -7,26 +7,26 @@
 persistently(.f, quiet = TRUE, max_attempts = 5, wait_seconds = 0.1)
 }
 \arguments{
-\item{.f}{A function, formula, or atomic vector. See [purrr::map()]}
+\item{.f}{A function, formula, or atomic vector. See \code{\link[purrr]{map()}}}
 
-\item{quiet}{Hide errors (`TRUE`, the default), or display them
+\item{quiet}{Hide errors (\code{TRUE}, the default), or display them
 as they occur?}
 
-\item{max_attempts}{Positive integer. `persistent` functions will try
+\item{max_attempts}{Positive integer. \code{persistent} functions will try
 to run this many times before giving up.}
 
 \item{wait_seconds}{Positive number. Base multiplier for time in seconds to
 wait between attempts. The time increases exponentially, with a wait time
-randomly chosen from a uniform distribution between `0` and
-`wait_seconds * 2 ^ (i - 1)` seconds, between the `i`th and
-`i + 1`th attempts.}
+randomly chosen from a uniform distribution between \code{0} and
+\code{wait_seconds * 2 ^ (i - 1)} seconds, between the \code{i}th and
+\code{i + 1}th attempts.}
 }
 \value{
-wrapped function uses a default value (`otherwise`)
+wrapped function uses a default value (\code{otherwise})
   whenever an error occurs max_attempts times.
 }
 \description{
-Imported from `github.com/ijlyttle` and his `warrenr` package. These functions wrap functions so that instead of generating side effects
+Imported from \url{https://github.com/ijlyttle} and his \code{warrenr} package. These functions wrap functions so that instead of generating side effects
 through printed output, messages, warnings, and errors, they return enhanced
 output. They are all adverbs because they modify the action of a verb (a
 function).
@@ -56,5 +56,5 @@ persistent_risky_runif <- persistently(
 
 }
 \seealso{
-[httr::RETRY()] is a special case of [persistently()]
+\code{\link[httr]{RETRY()}} is a special case of \code{\link{persistently()}}
 }

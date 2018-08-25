@@ -7,9 +7,9 @@
 get_player_stats_team(..., .progress = TRUE)
 }
 \arguments{
-\item{...}{Function requires a `team_url`, `team_name`, `league`, and `season.` Additional data may be supplied. All of this information comes directly from `get_teams()`, if desired.}
+\item{...}{Function requires a \code{team_url}, \code{team_name}, \code{league}, and \code{season}. Additional data may be supplied. All of this information comes directly from \code{\link{get_teams()}}, if desired.}
 
-\item{.progress}{Sets a Progress Bar. Defaults to `TRUE`.}
+\item{.progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
 }
 \description{
 Returns a data frame of players' stats and player URLs for user supplied teams & seasons

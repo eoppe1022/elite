@@ -9,7 +9,7 @@ get_years_difference(from, to)
 \arguments{
 \item{from}{The start date. Typically the player's birth date.}
 
-\item{to}{The reference date. Used for finding a player's draft eligibility, it's typically `2018-09-15`, or whatever the year of the NHL draft is.}
+\item{to}{The reference date. Used for finding a player's draft eligibility, it's typically \code{2018-09-15}, or whatever the year of the NHL draft is.}
 }
 \description{
 Returns the exact age of a player given his birth date and some reference date

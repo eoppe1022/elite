@@ -3,8 +3,8 @@
 #' Returns a data frame of teams and their URLs for user supplied leagues & seasons
 #' 
 #' @param .league Leagues from which the user wants to scrape data
-#' @param .season Seasons for which the user wants to scrape data. Must be of the form `2017-2018`, `1964-1965`, etc.
-#' @param .progress Sets a Progress Bar. Defaults to `TRUE`.
+#' @param .season Seasons for which the user wants to scrape data. Must be of the form \code{2017-2018}, \code{1964-1965}, etc.
+#' @param .progress Sets a Progress Bar. Defaults to \code{TRUE}.
 #' @param ... Allows the user to supply other information to the function. If you don't know what this means, then don't worry about it.
 #' @examples 
 #' get_teams("ohl", "2012-2013")
@@ -51,14 +51,14 @@ get_teams <- function(.league, .season, .progress = TRUE, ...) {
     team <- page %>%
       rvest::html_nodes("#standings .team a") %>%
       rvest::html_text() %>%
-      stringr::str_trim(side = "both") %>%
+      stringr::str_squish() %>%
       as_tibble() %>%
       purrr::set_names("team")
     
     league <- page %>%
       rvest::html_nodes("small") %>%
       rvest::html_text() %>%
-      stringr::str_trim(side = "both")
+      stringr::str_squish()
     
     season <- stringr::str_split(.season, "-", simplify = TRUE, n = 2)[,2] %>%
       stringr::str_sub(3, 4) %>%

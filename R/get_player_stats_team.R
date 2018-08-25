@@ -2,8 +2,8 @@
 #' 
 #' Returns a data frame of players' stats and player URLs for user supplied teams & seasons
 #'
-#' @param ... Function requires a `team_url`, `team_name`, `league`, and `season.` Additional data may be supplied. All of this information comes directly from `get_teams()`, if desired.
-#' @param .progress Sets a Progress Bar. Defaults to `TRUE`.
+#' @param ... Function requires a \code{team_url}, \code{team_name}, \code{league}, and \code{season}. Additional data may be supplied. All of this information comes directly from \code{\link{get_teams()}}, if desired.
+#' @param .progress Sets a Progress Bar. Defaults to \code{TRUE}.
 #' @examples 
 #' 
 #' # The function works in conjunction with get_teams()
@@ -68,6 +68,7 @@ get_player_stats_team <- function(..., .progress = TRUE) {
       mutate(league = league) %>%
       mutate(season = season) %>%
       mutate(team_url = team_url) %>%
+      mutate_at(vars(-c(name, team, league, season, position, player_url, team_url)), as.numeric) %>%
       select(name, team, league, season, everything())
     
     if (.progress) {pb$tick()}

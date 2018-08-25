@@ -9,9 +9,9 @@ get_teams(.league, .season, .progress = TRUE, ...)
 \arguments{
 \item{.league}{Leagues from which the user wants to scrape data}
 
-\item{.season}{Seasons for which the user wants to scrape data. Must be of the form `2017-2018`, `1964-1965`, etc.}
+\item{.season}{Seasons for which the user wants to scrape data. Must be of the form \code{2017-2018}, \code{1964-1965}, etc.}
 
-\item{.progress}{Sets a Progress Bar. Defaults to `TRUE`.}
+\item{.progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
 
 \item{...}{Allows the user to supply other information to the function. If you don't know what this means, then don't worry about it.}
 }

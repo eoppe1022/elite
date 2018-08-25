@@ -8,11 +8,11 @@ get_player_stats_individual(..., .progress = TRUE,
   .strip_redundancy = TRUE)
 }
 \arguments{
-\item{...}{Function requires a `player_url`, `name.` Additional data may be supplied. All of this information comes directly from `get_player_stats_team()` and `get_teams()`, if desired.}
+\item{...}{Function requires a \code{player_url} and \code{name}. Additional data may be supplied. All of this information comes directly from \code{\link{get_player_stats_team()}} and \code{\link{get_teams()}}, if desired.}
 
-\item{.progress}{Sets a Progress Bar. Defaults to `TRUE`.}
+\item{.progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
 
-\item{.strip_redundancy}{Removes variables `name_`, `player_url_`, and `position_`, as they're the same as `name`, `player_url`, and `position.` Defaults to `TRUE`.}
+\item{.strip_redundancy}{Removes variables \code{name_}, \code{player_url_}, and \code{position_}, as they're the same as \code{name}, \code{player_url}, and \code{position}. Defaults to \code{TRUE}.}
 }
 \description{
 Returns a data frame of players, their bio information (age, birth place, etc.), and career statistics for user supplied player URLs and names.
