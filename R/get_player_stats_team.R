@@ -2,7 +2,7 @@
 #' 
 #' Returns a data frame of players' stats and player URLs for user supplied teams & seasons
 #'
-#' @param ... Function requires a \code{team_url}, \code{team_name}, \code{league}, and \code{season}. Additional data may be supplied. All of this information comes directly from \code{\link{get_teams()}}, if desired.
+#' @param ... Function requires a \code{team_url}, \code{team_name}, \code{league}, and \code{season}. Additional data may be supplied. All of this information comes directly from \code{get_teams()}, if desired.
 #' @param .progress Sets a Progress Bar. Defaults to \code{TRUE}.
 #' @examples 
 #' 

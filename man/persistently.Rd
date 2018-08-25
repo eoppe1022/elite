@@ -7,7 +7,7 @@
 persistently(.f, quiet = TRUE, max_attempts = 5, wait_seconds = 0.1)
 }
 \arguments{
-\item{.f}{A function, formula, or atomic vector. See \code{\link[purrr]{map()}}}
+\item{.f}{A function, formula, or atomic vector.}
 
 \item{quiet}{Hide errors (\code{TRUE}, the default), or display them
 as they occur?}
@@ -54,7 +54,4 @@ persistent_risky_runif <- persistently(
 }
 
 
-}
-\seealso{
-\code{\link[httr]{RETRY()}} is a special case of \code{\link{persistently()}}
 }

@@ -5,7 +5,7 @@
 #' output. They are all adverbs because they modify the action of a verb (a
 #' function).
 #'
-#' @param .f A function, formula, or atomic vector. See \code{\link[purrr]{map()}}
+#' @param .f A function, formula, or atomic vector.
 #' @param quiet Hide errors (\code{TRUE}, the default), or display them
 #'   as they occur?
 #' @param max_attempts Positive integer. \code{persistent} functions will try
@@ -16,7 +16,6 @@
 #'   \code{wait_seconds * 2 ^ (i - 1)} seconds, between the \code{i}th and
 #'   \code{i + 1}th attempts.
 #'
-#' @seealso \code{\link[httr]{RETRY()}} is a special case of \code{\link{persistently()}}
 #' @return wrapped function uses a default value (\code{otherwise})
 #'   whenever an error occurs max_attempts times.
 #' @export

@@ -2,7 +2,7 @@
 #' 
 #' Returns a data frame of players, their bio information (age, birth place, etc.), and career statistics for user supplied player URLs and names. 
 #' 
-#' @param ... Function requires a \code{player_url} and \code{name}. Additional data may be supplied. All of this information comes directly from \code{\link{get_player_stats_team()}} and \code{\link{get_teams()}}, if desired.
+#' @param ... Function requires a \code{player_url} and \code{name}. Additional data may be supplied. All of this information comes directly from \code{get_player_stats_team()} and \code{get_teams()}, if desired.
 #' @param .progress Sets a Progress Bar. Defaults to \code{TRUE}.
 #' @param .strip_redundancy Removes variables \code{name_}, \code{player_url_}, and \code{position_}, as they're the same as \code{name}, \code{player_url}, and \code{position}. Defaults to \code{TRUE}.
 #' @examples 
