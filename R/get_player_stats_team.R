@@ -55,6 +55,15 @@ get_player_stats_team <- function(..., .progress = TRUE) {
       select(-c(blank, number)) %>%
       select(name, position, everything())
     
+    league_from_team_page <- page %>%
+      rvest::html_node(".skater-stats .title a") %>%
+      rvest::html_text() %>%
+      stringr::str_squish()
+    
+    league_from_team_page_lower_case <- league_from_team_page %>%
+      tolower() %>%
+      stringr::str_replace_all(" ", "-")
+    
     player_urls <- page %>%
       rvest::html_nodes("tbody+ tbody .txt-blue a") %>%
       rvest::html_attr("href") %>%
@@ -65,16 +74,20 @@ get_player_stats_team <- function(..., .progress = TRUE) {
     all_data <- player_stats %>%
       bind_cols(player_urls) %>% 
       mutate(team = team_name) %>%
-      mutate(league = league) %>%
       mutate(season = season) %>%
       mutate(team_url = team_url) %>%
+      mutate(.league = league) %>%
+      mutate(league = league_from_team_page) %>%
+      mutate(league_from_team_page_lower_case = league_from_team_page_lower_case) %>%
+      filter(league_from_team_page_lower_case == .league) %>%
+      select(-c(league_from_team_page_lower_case, .league)) %>%
       mutate_at(vars(-c(name, team, league, season, position, player_url, team_url)), as.numeric) %>%
       select(name, team, league, season, everything())
     
     if (.progress) {pb$tick()}
     
     return(all_data)}
-
+  
   player_stats_team <- purrr::pmap_dfr(..., elite::persistently(.get_player_stats_team, max_attempts = 10))
   
   return(player_stats_team)

@@ -16,11 +16,11 @@ get_teams(.league, .season, .progress = TRUE, ...)
 \item{...}{Allows the user to supply other information to the function. If you don't know what this means, then don't worry about it.}
 }
 \description{
-Returns a data frame of teams and their URLs for user supplied leagues & seasons
+Returns a data frame of teams and their URLs for user supplied leagues & seasons. Bear in mind that there are some cases in which teams that aren't part of the user-supplied league are returned in the data frame. This is normal and is fixed later when using \code{get_player_stats_team()}.
 }
 \examples{
 get_teams("ohl", "2012-2013")
 
-get_teams(c("SHL", "allsvenskan", "ncaa iii"), c("2014-2015", "1993-1994"), .progress = TRUE)
+get_teams(c("SHL", "allsvenskan", "ncaa iii"), c("2014-2015", "1993-1994"), .progress = FALSE)
 
 }
