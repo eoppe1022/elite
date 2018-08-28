@@ -59,16 +59,37 @@ library(dplyr)
 teams <- get_teams("ohl", "2017-2018")
 
 # get every players' stats for the ohl in 2018
-stats <- get_player_stats_team(teams)
-
-teams
+get_player_stats_team(teams)
 
 # the same thing as above but for the whl and for the past 2 seasons
-stats <- get_teams("whl", c("2017-2018", "2016-2017")) %>%
+get_teams("whl", c("2017-2018", "2016-2017")) %>%
   get_player_stats_team()
+````
+
+### `get_player_stats_individual()`
+This function works in conjunction with both `get_player_stats_team()` and `get_drafts()`, as it provides the players' career statistics and bio. information (age, height, etc.) for a supplied name and player URL. This data is returned in a variable named `player_statistics` &mdash; a list variable in which each player's career statistics are in a nested tibble. You can use `tidyr::unnest()` to lengthen the data-frame and see the players' career statistics. 
+
+````
+library(elite)
+library(dplyr)
+
+# get nhl draft data from 2018
+draft <- get_drafts("nhl", "2018")
+
+# get all the drafted players' career stats and bio. info
+stats <- get_player_stats_individual(draft)
+
+# see unnested data frame
+stats %>% tidyr::unnest(player_statistics)
+
+# can also be used for season data
+# same example as earlier
+stats <- get_teams("whl", c("2017-2018", "2016-2017")) %>%
+  get_player_stats_team() %>%
+  get_player_stats_individual()
   
-stats  
+stats %>% tidyr::unnest(player_statistics)
 ````
 
 ## A Quick (but Important) Note on Patience
-EliteProspects is an invaluable resource to the hockey community. By creating this package, I &mdash; by no means &mdash; aim to compete with EliteProspects in any way. The purpose of this package is solely to provide a medium to easily analyze and model data from EliteProspects. Thus, to make sure that no harm comes to EliteProspects from my making of this package, I set a `Sys.sleep()` of 30-35 seconds between each scrape. This means that between each scrape, there will be a mandatory wait time (that I already coded into my functions) of 30-35 seconds so that EliteProspects' servers don't get overloaded with requests. This is important, as &mdash; without this measure &mdash; it's possible that EliteProspects could block the user's IP address or take some other form of action.
+EliteProspects is an invaluable resource to the hockey community. By creating this package, I &mdash; by no means &mdash; aim to compete with EliteProspects in any way. The purpose of this package is solely to provide a medium to easily analyze and model data from EliteProspects. Thus, to make sure that no harm comes to EliteProspects from my making of this package, I set a `Sys.sleep()` of 30-35 seconds between each scrape. This means that between each scrape, there will be a mandatory wait time (that I already coded into my functions) of 30-35 seconds so that EliteProspects' servers don't get overloaded with requests. This is important, as &mdash; without this measure &mdash; it's possible that EliteProspects could block the user's IP address or take some other form of action. This all means that some scrapes can take hours or even days long, depdending on what you want to scrape. So, I ask that you be patient with your scrapes and that you view this as more of a delivery service that takes a while than some sort of immediate action.
