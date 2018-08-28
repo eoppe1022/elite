@@ -1,5 +1,5 @@
 # elite
-A package for scraping hockey data from EliteProspects in a [fairly] tidy manner for the purpose of analysis
+This is a package for scraping hockey data from EliteProspects in a [fairly] tidy manner for the purpose of analysis
 
 ## Installation
 You can install `elite` from github with:
@@ -96,7 +96,7 @@ stats %>% tidyr::unnest(player_statistics)
 EliteProspects is an invaluable resource to the hockey community. By creating this package, I &mdash; by no means &mdash; aim to compete with EliteProspects in any way. The purpose of this package is solely to provide a medium to easily analyze and model data from EliteProspects. Thus, to make sure that no harm comes to EliteProspects from my making of this package, I set a `Sys.sleep()` of 30-35 seconds between each scrape. This means that between each scrape, there will be a mandatory wait time (that I already coded into my functions) of 30-35 seconds so that EliteProspects' servers don't get overloaded with requests. This is important, as &mdash; without this measure &mdash; it's possible that EliteProspects could block the user's IP address or take some other form of action. This all means that some scrapes can take hours or even days long, depdending on what you want to scrape. So, I ask that you be patient with your scrapes and that you view this as more of a delivery service that takes a while than some sort of immediate action.
 
 ## Final Notes
-This is my first R package. Please be kind. Report any issues [here](https://github.com/eoppe1022/elite/issues), and I'll do the best that I can to solve them. I'd welcome any Pull Requests too, if you have any changes in mind.
+This is my first R package, so please be kind. Report any issues [here](https://github.com/eoppe1022/elite/issues), and I'll do the best that I can to solve them. I'd welcome any Pull Requests too, if you have any changes in mind.
 
 You can follow and message me on [Twitter](http://www.twitter.com/OppenheimerEvan). Feel free to e-mail me at eoppe1022 (at) gmail.com with any questions.
 
