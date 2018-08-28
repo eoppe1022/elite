@@ -8,7 +8,7 @@ get_player_stats_individual(..., .progress = TRUE,
   .strip_redundancy = TRUE)
 }
 \arguments{
-\item{...}{Function requires a \code{player_url} and \code{name}. Additional data may be supplied. All of this information comes directly from \code{get_player_stats_team()} and \code{get_teams()}, if desired.}
+\item{...}{Function requires a \code{player_url} and \code{name}. Additional data may be supplied. All of this information comes directly from \code{get_player_stats_team()} and \code{get_teams()} or \code{get_drafts()}, if desired.}
 
 \item{.progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
 
@@ -23,6 +23,10 @@ Returns a data frame of players, their bio information (age, birth place, etc.),
 teams <- get_teams("ohl", "2017-2018")
 stats_team <- get_player_stats_team(teams)
 get_player_stats_individual(stats_team)
+
+# The function also works in conjunction with get_drafts()
+drafts <- get_drafts("nhl entry draft", "2018")
+get_player_stats_individual(drafts)
 
 # All functions are easily pipeable too
 get_teams(c("shl", "allsvenskan"), c("2008-2009", "2009-2010", "2010-2011")) \%>\%
