@@ -18,7 +18,7 @@ The `elite` package is built on 4 main functions:
 - `get_drafts()`
 - `get_teams()`
 - `get_player_stats_team()`
-- `get_player_stats_individual()`. 
+- `get_player_stats_individual()`
 
 These 4 functions work in conjunction with one another to allow the user to cleanly and quickly get data from EliteProspects.
 
