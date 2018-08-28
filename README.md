@@ -1,5 +1,5 @@
 # elite
-A Package for Scraping Hockey Data from Elite Prospects
+A package for scraping hockey data from EliteProspects in a [fairly] tidy manner.
 
 ## Installation
 You can install `elite` from github with:
