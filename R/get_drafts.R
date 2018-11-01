@@ -94,7 +94,7 @@ get_drafts <- function(.draft_type, .draft_year, .progress = TRUE, ...) {
     
     all_data <- player_info %>%
       bind_cols(player_url) %>%
-      right_join(player_names_with_no_selection, by = c("value" = "value")) %>%
+      semi_join(player_names_with_no_selection, by = c("value" = "value")) %>%
       bind_cols(draft_pick_info) %>%
       bind_cols(draft_team) %>%
       mutate(draft_league = draft_league) %>%
