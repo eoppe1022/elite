@@ -92,16 +92,33 @@ get_drafts <- function(.draft_type, .draft_year, .progress = TRUE, ...) {
       as_tibble() %>%
       purrr::set_names("value")
     
-    all_data <- player_info %>%
-      bind_cols(player_url) %>%
-      semi_join(player_names_with_no_selection, by = c("value" = "value")) %>%
-      bind_cols(draft_pick_info) %>%
-      bind_cols(draft_team) %>%
-      mutate(draft_league = draft_league) %>%
-      mutate(draft_year = draft_year) %>%
-      select(-c(value)) %>%
-      select(draft_league, draft_year, pick_number, round, draft_team, name, position, player_url)
+    if (any(duplicated(player_info))) {
+      
+      all_data <- player_info %>%
+        bind_cols(player_url) %>%
+        semi_join(player_names_with_no_selection, by = c("value" = "value")) %>%
+        bind_cols(draft_pick_info) %>%
+        bind_cols(draft_team) %>%
+        mutate(draft_league = draft_league) %>%
+        mutate(draft_year = draft_year) %>%
+        select(-c(value)) %>%
+        select(draft_league, draft_year, pick_number, round, draft_team, name, position, player_url)
+      
+    }
     
+    else {
+      
+      all_data <- player_info %>%
+        bind_cols(player_url) %>%
+        right_join(player_names_with_no_selection, by = c("value" = "value")) %>%
+        bind_cols(draft_pick_info) %>%
+        bind_cols(draft_team) %>%
+        mutate(draft_league = draft_league) %>%
+        mutate(draft_year = draft_year) %>%
+        select(-c(value)) %>%
+        select(draft_league, draft_year, pick_number, round, draft_team, name, position, player_url)
+      
+    }
     if (.progress) {pb$tick()}
     
     return(all_data)}
