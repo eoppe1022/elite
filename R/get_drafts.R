@@ -119,6 +119,7 @@ get_drafts <- function(.draft_type, .draft_year, .progress = TRUE, ...) {
         select(draft_league, draft_year, pick_number, round, draft_team, name, position, player_url)
       
     }
+    
     if (.progress) {pb$tick()}
     
     return(all_data)}
