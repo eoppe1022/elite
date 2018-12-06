@@ -32,6 +32,10 @@ get_player_stats_team <- function(..., .progress = TRUE) {
   
   .get_player_stats_team <- function(team_url, team, league, season, ...) {
     
+    seq(20, 25, by = 0.001) %>%
+      sample(1) %>%
+      Sys.sleep()
+    
     page <- team_url %>% xml2::read_html()
     
     player_stats <- page %>%
