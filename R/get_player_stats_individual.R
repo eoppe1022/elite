@@ -64,9 +64,9 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
     
     else {
       
-     # seq(20, 25, by = 0.001) %>%
-      #  sample(1) %>%
-       # Sys.sleep()
+      seq(20, 25, by = 0.001) %>%
+        sample(1) %>%
+        Sys.sleep()
       
       page <- player_url %>% xml2::read_html()
       
