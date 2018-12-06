@@ -64,9 +64,9 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
     
     else {
       
-      seq(20, 25, by = 0.001) %>%
-        sample(1) %>%
-        Sys.sleep()
+     # seq(20, 25, by = 0.001) %>%
+      #  sample(1) %>%
+       # Sys.sleep()
       
       page <- player_url %>% xml2::read_html()
       
@@ -179,19 +179,7 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
   mydata <- player_stats_individual %>% 
     bind_cols(...)
   
-  if (!c("pick_number" %in% colnames(mydata))) {
-  
-    mydata <- mydata %>%
-      mutate(season_short = as.numeric(stringr::str_split(season, "-", simplify = TRUE, n = 2)[,1]) + 1) %>%
-      mutate(draft_eligibility_date = stringr::str_c(as.character(season_short), "09-15", sep = "-")) %>%
-      mutate(age = elite::get_years_difference(birthday, draft_eligibility_date)) %>%
-      select(name, team, league, position, shot_handedness, birth_place, birth_country, birthday, height, weight, season, season_short, age, games_played, goals, assists, points, penalty_minutes, plus_minus, games_played_playoffs, goals_playoffs, assists_playoffs, points_playoffs, penalty_minutes_playoffs, plus_minus_playoffs, player_url, team_url, name_, position_, player_url_, player_statistics) %>%
-      mutate_at(vars(c(name, team, league, position, shot_handedness, birth_place, birth_country, birthday, season, player_url, team_url, name_, position_, player_url_)), as.character) %>%
-      mutate_at(vars(-c(name, team, league, position, shot_handedness, birth_place, birth_country, birthday, season, player_url, team_url, name_, position_, player_url_, player_statistics)), as.numeric)
-  
-  }
-  
-  else {
+  if ("pick_number" %in% colnames(mydata)) {
     
     mydata <- mydata %>%
       mutate(draft_eligibility_date = stringr::str_c(draft_year, "09-15", sep = "-")) %>%
@@ -202,7 +190,31 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
     
   }
   
-  if (.strip_redundancy) {mydata <- mydata %>% select(-c(name_, position_, player_url_))}
+  else if ("season" %in% colnames(mydata)) {
+    
+    mydata <- mydata %>%
+      mutate(season_short = as.numeric(stringr::str_split(season, "-", simplify = TRUE, n = 2)[,1]) + 1) %>%
+      mutate(draft_eligibility_date = stringr::str_c(as.character(season_short), "09-15", sep = "-")) %>%
+      mutate(age = elite::get_years_difference(birthday, draft_eligibility_date)) %>%
+      select(name, team, league, position, shot_handedness, birth_place, birth_country, birthday, height, weight, season, season_short, age, games_played, goals, assists, points, penalty_minutes, plus_minus, games_played_playoffs, goals_playoffs, assists_playoffs, points_playoffs, penalty_minutes_playoffs, plus_minus_playoffs, player_url, team_url, name_, position_, player_url_, player_statistics) %>%
+      mutate_at(vars(c(name, team, league, position, shot_handedness, birth_place, birth_country, birthday, season, player_url, team_url, name_, position_, player_url_)), as.character) %>%
+      mutate_at(vars(-c(name, team, league, position, shot_handedness, birth_place, birth_country, birthday, season, player_url, team_url, name_, position_, player_url_, player_statistics)), as.numeric)
+    
+  }
+  
+  else {
+    
+    mydata <- mydata %>%
+      select(name, position = position_, shot_handedness, birth_place, birth_country, birthday, height, weight, player_url, name_, player_url_, player_statistics) %>%
+      mutate_at(vars(c(name, position, shot_handedness, birth_place, birth_country, birthday, player_url, name_, player_url_)), as.character) %>%
+      mutate_at(vars(-c(name, position, shot_handedness, birth_place, birth_country, birthday, player_url, name_, player_url_, player_statistics)), as.numeric)
+    
+    
+  }
+  
+  if (.strip_redundancy & "season" %in% colnames(mydata)) {mydata <- mydata %>% select(-c(name_, position_, player_url_))}
+  
+  else if (.strip_redundancy & !c("season" %in% colnames(mydata))) {mydata <- mydata %>% select(-c(name_, player_url_))}
   
   return(mydata)
   
