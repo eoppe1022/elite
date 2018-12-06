@@ -35,9 +35,13 @@ get_teams <- function(.league, .season, .progress = TRUE, ...) {
   
   .get_teams <- function(.league, .season, ...) {
     
-    seq(30, 35, by = 0.001) %>%
-      sample(1) %>%
-      Sys.sleep()
+    if (nrow(mydata) > 1) {
+    
+      seq(20, 25, by = 0.001) %>%
+        sample(1) %>%
+        Sys.sleep()
+      
+    }  
     
     page <- stringr::str_c("https://www.eliteprospects.com/league/", .league, "/", .season) %>% xml2::read_html()
     

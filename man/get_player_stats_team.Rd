@@ -7,7 +7,7 @@
 get_player_stats_team(..., .progress = TRUE)
 }
 \arguments{
-\item{...}{Function requires a \code{team_url}, \code{team_name}, \code{league}, and \code{season}. Additional data may be supplied. All of this information comes directly from \code{get_teams()}, if desired.}
+\item{...}{Function requires a \code{team_url}, \code{team}, \code{league}, and \code{season}. Additional data may be supplied. All of this information comes directly from \code{get_teams()}, if desired.}
 
 \item{.progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
 }

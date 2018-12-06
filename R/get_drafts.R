@@ -35,9 +35,13 @@ get_drafts <- function(.draft_type, .draft_year, .progress = TRUE, ...) {
   
   .get_drafts <- function(.draft_type, .draft_year, ...) {
     
-    seq(30, 35, by = 0.001) %>%
-      sample(1) %>%
-      Sys.sleep()
+    if (nrow(mydata) > 1) {
+    
+      seq(20, 25, by = 0.001) %>%
+        sample(1) %>%
+        Sys.sleep()
+      
+    }
 
     page <- stringr::str_c("https://www.eliteprospects.com/draft/", .draft_type, "/", .draft_year) %>% xml2::read_html()
     
