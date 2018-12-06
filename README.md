@@ -5,7 +5,7 @@ This is a package for scraping hockey data from EliteProspects in a [fairly] tid
 You can install `elite` from github with:
 ````
 # install.packages("devtools")
-devtools::install_github("eoppe1022/elite")
+devtools::install_github("eoppe1022/elite", force = TRUE)
 ````
 
 To load the package:
