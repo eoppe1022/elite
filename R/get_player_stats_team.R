@@ -44,7 +44,7 @@ get_player_stats_team <- function(..., .progress = TRUE) {
       purrr::set_names("number", "name", "games_played", "goals", "assists", "points", "penalty_minutes", "plus_minus", "blank", "games_played_playoffs", "goals_playoffs", "assists_playoffs", "points_playoffs", "penalty_minutes_playoffs", "plus_minus_playoffs") %>%
       as_tibble() %>%
       filter(row_number() > 1) %>%
-      filter(row_number() <= if_else(!any(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup")), n(), which(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup"))[1])) %>%
+      filter(row_number() <= if_else(!any(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup", "Super Series")), n(), which(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup", "Super Series"))[1])) %>%
       filter(!is.na(number) & name != "") %>%
       mutate(position = stringr::str_split(name, "\\(", simplify = TRUE, n = 2)[,2]) %>%
       mutate(position = stringr::str_split(position, "\\)", simplify = TRUE, n = 2)[,1]) %>%
@@ -65,7 +65,7 @@ get_player_stats_team <- function(..., .progress = TRUE) {
       purrr::set_names("number", "name", "games_played", "goals_against_average", "save_percentage", "blank", "games_played_playoffs", "goals_against_average_playoffs", "save_percentage_playoffs") %>%
       as_tibble() %>%
       filter(row_number() > 1) %>%
-      filter(row_number() <= if_else(!any(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup")), n(), which(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup"))[1])) %>%
+      filter(row_number() <= if_else(!any(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup", "Super Series")), n(), which(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup", "Super Series"))[1])) %>%
       filter(!is.na(number) & name != "") %>%
       mutate_all(~na_if(., "-")) %>%
       mutate_all(~na_if(., "")) %>%
