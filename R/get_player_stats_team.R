@@ -3,7 +3,7 @@
 #' Returns a data frame of players' stats and player URLs for user supplied teams & seasons
 #'
 #' @param ... Function requires a \code{team_url}, \code{team}, \code{league}, and \code{season}. Additional data may be supplied. All of this information comes directly from \code{get_teams()}, if desired.
-#' @param .progress Sets a Progress Bar. Defaults to \code{TRUE}.
+#' @param progress Sets a Progress Bar. Defaults to \code{TRUE}.
 #' @examples 
 #' 
 #' # The function works in conjunction with get_teams()
@@ -12,7 +12,7 @@
 #' 
 #' # All functions are easily pipeable too
 #' get_teams(c("shl", "allsvenskan"), c("2008-2009", "2009-2010", "2010-2011")) %>%
-#'   get_player_stats_team(.progress = TRUE)
+#'   get_player_stats_team(progress = TRUE)
 #'   
 #' # It's also easy to get player stats for only 1 team   
 #' get_teams("ncaa iii", "2017-2018") %>%
@@ -22,19 +22,33 @@
 #' @export
 #' @import dplyr
 #' 
-get_player_stats_team <- function(..., .progress = TRUE) {
+get_player_stats_team <- function(..., progress = TRUE, other = "") {
   
-  if (.progress) {
+  if (progress) {
     
-    pb <- progress::progress_bar$new(format = "get_player_stats_team() [:bar] :percent eta: :eta", clear = FALSE, total = nrow(...), show_after = 0) 
+    pb <- progress::progress_bar$new(format = "get_player_stats_team() [:bar] :percent ETA: :eta", clear = FALSE, total = nrow(...), show_after = 0) 
+    
+    cat("\n")
     
     pb$tick(0)}
   
   .get_player_stats_team <- function(team_url, team, league, season, ...) {
     
-    seq(20, 25, by = 0.001) %>%
-      sample(1) %>%
-      Sys.sleep()
+    if (other == "evan") {
+      
+      seq(7, 11, by = 0.001) %>%
+        sample(1) %>%
+        Sys.sleep()
+      
+    }
+    
+    else {
+      
+      seq(20, 35, by = 0.001) %>%
+        sample(1) %>%
+        Sys.sleep()
+      
+    }
     
     page <- team_url %>% xml2::read_html()
     
@@ -125,11 +139,13 @@ get_player_stats_team <- function(..., .progress = TRUE) {
       mutate_at(vars(-c(name, team, league, season, position, player_url, team_url)), as.numeric) %>%
       select(name, team, league, season, everything())
     
-    if (.progress) {pb$tick()}
+    if (progress) {pb$tick()}
     
     return(all_data)}
   
   player_stats_team <- purrr::pmap_dfr(..., elite::persistently(.get_player_stats_team, max_attempts = 10))
+  
+  cat("\n")
   
   return(player_stats_team)
   

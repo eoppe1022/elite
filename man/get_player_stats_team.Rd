@@ -4,12 +4,12 @@
 \alias{get_player_stats_team}
 \title{Gets players' stats and URLs for specified team}
 \usage{
-get_player_stats_team(..., .progress = TRUE)
+get_player_stats_team(..., progress = TRUE, other = "")
 }
 \arguments{
 \item{...}{Function requires a \code{team_url}, \code{team}, \code{league}, and \code{season}. Additional data may be supplied. All of this information comes directly from \code{get_teams()}, if desired.}
 
-\item{.progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
+\item{progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
 }
 \description{
 Returns a data frame of players' stats and player URLs for user supplied teams & seasons
@@ -22,7 +22,7 @@ get_player_stats_team(teams)
 
 # All functions are easily pipeable too
 get_teams(c("shl", "allsvenskan"), c("2008-2009", "2009-2010", "2010-2011")) \%>\%
-  get_player_stats_team(.progress = TRUE)
+  get_player_stats_team(progress = TRUE)
   
 # It's also easy to get player stats for only 1 team   
 get_teams("ncaa iii", "2017-2018") \%>\%

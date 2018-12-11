@@ -4,15 +4,15 @@
 \alias{get_player_stats_individual}
 \title{Gets bio information and career statistics for specified player}
 \usage{
-get_player_stats_individual(..., .progress = TRUE,
-  .strip_redundancy = TRUE)
+get_player_stats_individual(..., progress = TRUE,
+  strip_redundancy = TRUE, other = "")
 }
 \arguments{
 \item{...}{Function requires a \code{player_url} and \code{name}. Additional data may be supplied. All of this information comes directly from \code{get_player_stats_team()} and \code{get_teams()} or \code{get_drafts()}, if desired.}
 
-\item{.progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
+\item{progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
 
-\item{.strip_redundancy}{Removes variables \code{name_}, \code{player_url_}, and \code{position_}, as they're the same as \code{name}, \code{player_url}, and \code{position}. Defaults to \code{TRUE}.}
+\item{strip_redundancy}{Removes variables \code{name_}, \code{player_url_}, and \code{position_}, as they're the same as \code{name}, \code{player_url}, and \code{position}. Defaults to \code{TRUE}.}
 }
 \description{
 Returns a data frame of players, their bio information (age, birth place, etc.), and career statistics for user supplied player URLs and names.
@@ -30,8 +30,8 @@ get_player_stats_individual(drafts)
 
 # All functions are easily pipeable too
 get_teams(c("shl", "allsvenskan"), c("2008-2009", "2009-2010", "2010-2011")) \%>\%
-  get_player_stats_team(.progress = TRUE) \%>\%
-  get_player_stats_individual(.strip_redundancy = FALSE)
+  get_player_stats_team(progress = TRUE) \%>\%
+  get_player_stats_individual(strip_redundancy = FALSE)
   
 # It's also easy to get player stats & bio information for only 1 team   
 get_teams("ncaa iii", "2017-2018") \%>\%

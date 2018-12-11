@@ -3,8 +3,8 @@
 #' Returns a data frame of players, their bio information (age, birth place, etc.), and career statistics for user supplied player URLs and names. 
 #' 
 #' @param ... Function requires a \code{player_url} and \code{name}. Additional data may be supplied. All of this information comes directly from \code{get_player_stats_team()} and \code{get_teams()} or \code{get_drafts()}, if desired.
-#' @param .progress Sets a Progress Bar. Defaults to \code{TRUE}.
-#' @param .strip_redundancy Removes variables \code{name_}, \code{player_url_}, and \code{position_}, as they're the same as \code{name}, \code{player_url}, and \code{position}. Defaults to \code{TRUE}.
+#' @param progress Sets a Progress Bar. Defaults to \code{TRUE}.
+#' @param strip_redundancy Removes variables \code{name_}, \code{player_url_}, and \code{position_}, as they're the same as \code{name}, \code{player_url}, and \code{position}. Defaults to \code{TRUE}.
 #' @examples 
 #' 
 #' # The function works in conjunction with get_teams() and get_player_stats_team()
@@ -18,8 +18,8 @@
 #' 
 #' # All functions are easily pipeable too
 #' get_teams(c("shl", "allsvenskan"), c("2008-2009", "2009-2010", "2010-2011")) %>%
-#'   get_player_stats_team(.progress = TRUE) %>%
-#'   get_player_stats_individual(.strip_redundancy = FALSE)
+#'   get_player_stats_team(progress = TRUE) %>%
+#'   get_player_stats_individual(strip_redundancy = FALSE)
 #'   
 #' # It's also easy to get player stats & bio information for only 1 team   
 #' get_teams("ncaa iii", "2017-2018") %>%
@@ -37,11 +37,13 @@
 #' @export
 #' @import dplyr
 #' 
-get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy = TRUE) {
+get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy = TRUE, other = "") {
   
-  if (.progress) {
+  if (progress) {
     
-    pb <- progress::progress_bar$new(format = "get_player_stats_individual() [:bar] :percent eta: :eta", clear = FALSE, total = nrow(...), show_after = 0) 
+    pb <- progress::progress_bar$new(format = "get_player_stats_individual() [:bar] :percent ETA: :eta", clear = FALSE, total = nrow(...), show_after = 0) 
+    
+    cat("\n")
     
     pb$tick(0)}
   
@@ -64,9 +66,21 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
     
     else {
       
-      seq(20, 25, by = 0.001) %>%
-        sample(1) %>%
-        Sys.sleep()
+      if (other == "evan") {
+        
+        seq(7, 11, by = 0.001) %>%
+          sample(1) %>%
+          Sys.sleep()
+        
+      }
+      
+      else {
+        
+        seq(20, 35, by = 0.001) %>%
+          sample(1) %>%
+          Sys.sleep()
+        
+      }
       
       page <- player_url %>% xml2::read_html()
       
@@ -168,7 +182,7 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
       
     }
     
-    if (.progress) {pb$tick()}
+    if (progress) {pb$tick()}
     
     return(all_data)
     
@@ -212,9 +226,11 @@ get_player_stats_individual <- function(..., .progress = TRUE, .strip_redundancy
     
   }
   
-  if (.strip_redundancy & "season" %in% colnames(mydata)) {mydata <- mydata %>% select(-c(name_, position_, player_url_))}
+  if (strip_redundancy & "season" %in% colnames(mydata)) {mydata <- mydata %>% select(-c(name_, position_, player_url_))}
   
-  else if (.strip_redundancy & !c("season" %in% colnames(mydata))) {mydata <- mydata %>% select(-c(name_, player_url_))}
+  else if (strip_redundancy & !c("season" %in% colnames(mydata))) {mydata <- mydata %>% select(-c(name_, player_url_))}
+  
+  cat("\n")
   
   return(mydata)
   
