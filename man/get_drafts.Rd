@@ -19,8 +19,8 @@ get_drafts(draft_type, draft_year, progress = TRUE, other = "", ...)
 Returns a data frame of draft information, players' names, and player URLs for user supplied drafts (NHL Entry Draft, CHL Import Draft, etc.) & seasons.
 }
 \examples{
-get_drafts("chl import draft", "2018")
+get_drafts("chl import draft", 2018)
 
-get_drafts(c("nhl entry draft", "khl draft"), c("2018", "2017", "1994"))
+get_drafts(c("nhl entry draft", "khl draft"), c(1994, 2017:2018))
 
 }

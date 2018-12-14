@@ -7,15 +7,15 @@
 #' @examples 
 #' 
 #' # The function works in conjunction with get_teams()
-#' teams <- get_teams("ohl", "2017-2018")
+#' teams <- get_teams("ohl", 2018)
 #' get_player_stats_team(teams)
 #' 
 #' # All functions are easily pipeable too
-#' get_teams(c("shl", "allsvenskan"), c("2008-2009", "2009-2010", "2010-2011")) %>%
+#' get_teams(c("shl", "allsvenskan"), 2009:2011) %>%
 #'   get_player_stats_team(progress = TRUE)
 #'   
 #' # It's also easy to get player stats for only 1 team   
-#' get_teams("ncaa iii", "2017-2018") %>%
+#' get_teams("ncaa iii", 2018) %>%
 #'   filter(team == "Hamilton College") %>%
 #'   get_player_stats_team()
 #'   

@@ -20,27 +20,27 @@ Returns a data frame of players, their bio information (age, birth place, etc.),
 \examples{
 
 # The function works in conjunction with get_teams() and get_player_stats_team()
-teams <- get_teams("ohl", "2017-2018")
+teams <- get_teams("ohl", 2018)
 stats_team <- get_player_stats_team(teams)
 get_player_stats_individual(stats_team)
 
 # The function also works in conjunction with get_drafts()
-drafts <- get_drafts("nhl entry draft", "2018")
+drafts <- get_drafts("nhl entry draft", 2018)
 get_player_stats_individual(drafts)
 
 # All functions are easily pipeable too
-get_teams(c("shl", "allsvenskan"), c("2008-2009", "2009-2010", "2010-2011")) \%>\%
+get_teams(c("shl", "allsvenskan"), 2009:2011) \%>\%
   get_player_stats_team(progress = TRUE) \%>\%
   get_player_stats_individual(strip_redundancy = FALSE)
   
 # It's also easy to get player stats & bio information for only 1 team   
-get_teams("ncaa iii", "2017-2018") \%>\%
+get_teams("ncaa iii", 2018) \%>\%
   filter(team == "Hamilton College") \%>\%
   get_player_stats_team() \%>\%
   get_player_stats_individual()
   
 # Once you have your data, use tidyr::unnest() to view players' career statistics
-get_teams("ncaa iii", "2014-2015") \%>\%
+get_teams("ncaa iii", 2015) \%>\%
   filter(team == "Hamilton College") \%>\%
   get_player_stats_team() \%>\%
   get_player_stats_individual() \%>\%

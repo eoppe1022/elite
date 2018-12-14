@@ -7,9 +7,9 @@
 #' @param progress Sets a Progress Bar. Defaults to \code{TRUE}.
 #' @param ... Allows the user to supply other information to the function. If you don't know what this means, then don't worry about it.
 #' @examples 
-#' get_drafts("chl import draft", "2018")
+#' get_drafts("chl import draft", 2018)
 #' 
-#' get_drafts(c("nhl entry draft", "khl draft"), c("2018", "2017", "1994"))
+#' get_drafts(c("nhl entry draft", "khl draft"), c(1994, 2017:2018))
 #' 
 #' @export
 #' @import dplyr
@@ -20,7 +20,7 @@ get_drafts <- function(draft_type, draft_year, progress = TRUE, other = "",...) 
     
     cat("\n")
     
-    stop('\n\nMake sure your draft years are all 4-digit numbers in quotes like "1994" and "2017"\n\n')
+    stop('\n\nMake sure your draft years are all 4-digit numbers in like 1994 and 2017\n\n')
     
   }
   
@@ -28,7 +28,7 @@ get_drafts <- function(draft_type, draft_year, progress = TRUE, other = "",...) 
     
     cat("\n")
     
-    stop('\n\nMake sure your draft years are all actual draft years\n\n')
+    stop('\n\nMake sure your draft years are all actual draft years (not 2025)\n\n')
     
   }
   

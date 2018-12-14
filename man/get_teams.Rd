@@ -9,7 +9,7 @@ get_teams(league, season, progress = TRUE, other = "", ...)
 \arguments{
 \item{league}{Leagues from which the user wants to scrape data}
 
-\item{season}{Seasons for which the user wants to scrape data. Must be of the form \code{2017-2018}, \code{1964-1965}, etc.}
+\item{season}{Seasons for which the user wants to scrape data. Must be of the form \code{2018}, \code{1965}, etc. for the 2017-18 and 1964-65 seasons, respectively.}
 
 \item{progress}{Sets a Progress Bar. Defaults to \code{TRUE}.}
 
@@ -19,8 +19,8 @@ get_teams(league, season, progress = TRUE, other = "", ...)
 Returns a data frame of teams and their URLs for user supplied leagues & seasons. Bear in mind that there are some cases in which teams that aren't part of the user-supplied league are returned in the data frame. This is normal and is fixed later when using \code{get_player_stats_team()}.
 }
 \examples{
-get_teams("ohl", "2012-2013")
+get_teams("ohl", 2013)
 
-get_teams(c("SHL", "allsvenskan", "ncaa iii"), c("2014-2015", "1993-1994"), progress = FALSE)
+get_teams(c("SHL", "allsvenskan", "ncaa iii"), c(1994, 2017:2018), progress = FALSE)
 
 }

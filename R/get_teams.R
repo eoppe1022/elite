@@ -3,34 +3,34 @@
 #' Returns a data frame of teams and their URLs for user supplied leagues & seasons. Bear in mind that there are some cases in which teams that aren't part of the user-supplied league are returned in the data frame. This is normal and is fixed later when using \code{get_player_stats_team()}.
 #' 
 #' @param league Leagues from which the user wants to scrape data
-#' @param season Seasons for which the user wants to scrape data. Must be of the form \code{2017-2018}, \code{1964-1965}, etc.
+#' @param season Seasons for which the user wants to scrape data. Must be of the form \code{2018}, \code{1965}, etc. for the 2017-18 and 1964-65 seasons, respectively.
 #' @param progress Sets a Progress Bar. Defaults to \code{TRUE}.
 #' @param ... Allows the user to supply other information to the function. If you don't know what this means, then don't worry about it.
 #' @examples 
-#' get_teams("ohl", "2012-2013")
+#' get_teams("ohl", 2013)
 #' 
-#' get_teams(c("SHL", "allsvenskan", "ncaa iii"), c("2014-2015", "1993-1994"), progress = FALSE)
+#' get_teams(c("SHL", "allsvenskan", "ncaa iii"), c(1994, 2017:2018), progress = FALSE)
 #' 
 #' @export
 #' @import dplyr
 #' 
 get_teams <- function(league, season, progress = TRUE, other = "", ...) {
   
-  if (any(!stringr::str_detect(season, "[0-9]{4,4}-[0-9]{4,4}"))) {
+  if (any(nchar(season) > 4) | any(!stringr::str_detect(season, "[0-9]{4,4}"))) {
     
     cat("\n")
     
-    stop('\n\nMake sure your seasons are "legitimate" seasons of the 
-          \rformat "####-####", like "1993-1994" and "2017-2018"\n\n')
+    stop('\n\nMake sure your seasons are all 4-digit numbers
+          \rlike 1994 (for 1993-94) and 2017 (for 2016-17)\n\n')
     
   }
   
-  else if (any(as.numeric(str_split(season, "-", simplify = TRUE, n = 2)[,1]) > lubridate::year(Sys.time()))) {
+  else if (any(as.numeric(season) > 1 + lubridate::year(Sys.time()))) {
     
     cat("\n")
     
-    stop('\n\nMake sure your seasons are "legitimate" seasons of the 
-          \rformat "####-####", like "1993-1994" and "2017-2018"\n\n')
+    stop('\n\nMake sure your seasons are all actual
+          \rseasons (not 2025, you silly goose)\n\n')
     
   }
   
@@ -41,7 +41,8 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
   
   seasons <- season %>%
     as_tibble() %>%
-    purrr::set_names("season")
+    purrr::set_names("season") %>%
+    mutate(season = str_c(season - 1, season, sep = "-"))
   
   mydata <- tidyr::crossing(leagues, seasons)
   
@@ -73,7 +74,12 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
     
     page <- stringr::str_c("https://www.eliteprospects.com/league/", league, "/", season) %>% xml2::read_html()
     
-    team_url <- page %>% 
+    league_name <- page %>%
+      rvest::html_nodes("small") %>%
+      rvest::html_text() %>%
+      stringr::str_squish()
+    
+    team_urls <- page %>% 
       rvest::html_nodes(".column-4 i+ a") %>% 
       rvest::html_attr("href") %>%
       stringr::str_c(., season, sep = "/") %>%
@@ -81,7 +87,7 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
       as_tibble() %>%
       purrr::set_names("team_url")
     
-    team <- page %>%
+    teams <- page %>%
       rvest::html_nodes(".column-4 i+ a") %>%
       rvest::html_text() %>%
       stringr::str_squish() %>%
@@ -92,9 +98,9 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
       stringr::str_sub(3, 4) %>%
       stringr::str_c(stringr::str_split(season, "-", simplify = TRUE, n = 2)[,1], ., sep = "-")
     
-    all_data <- team %>%
-      bind_cols(team_url) %>% 
-      mutate(league = league) %>%
+    all_data <- teams %>%
+      bind_cols(team_urls) %>% 
+      mutate(league = league_name) %>%
       mutate(season = season)
     
     if (progress) {pb$tick()}
