@@ -42,7 +42,7 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
   seasons <- season %>%
     as_tibble() %>%
     purrr::set_names("season") %>%
-    mutate(season = str_c(season - 1, season, sep = "-"))
+    mutate(season = stringr::str_c(season - 1, season, sep = "-"))
   
   mydata <- tidyr::crossing(leagues, seasons)
   
