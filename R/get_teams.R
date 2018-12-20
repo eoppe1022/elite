@@ -79,7 +79,7 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
       rvest::html_text() %>%
       stringr::str_squish()
     
-    team_urls <- page %>% 
+    team_urls_rosters <- page %>% 
       rvest::html_nodes(".column-4 i+ a") %>% 
       rvest::html_attr("href") %>%
       stringr::str_c(., season, sep = "/") %>%
@@ -87,12 +87,34 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
       as_tibble() %>%
       purrr::set_names("team_url")
     
-    teams <- page %>%
+    teams_rosters <- page %>%
       rvest::html_nodes(".column-4 i+ a") %>%
       rvest::html_text() %>%
       stringr::str_squish() %>%
       as_tibble() %>%
       purrr::set_names("team")
+    
+    team_urls_standings <- page %>%
+      rvest::html_nodes("#standings .txt-blue a") %>%
+      rvest::html_attr("href") %>%
+      stringr::str_c(., "?tab=stats") %>%
+      as_tibble() %>%
+      purrr::set_names("team_url")
+    
+    teams_standings <- page %>%
+      rvest::html_nodes("#standings .txt-blue a") %>%
+      rvest::html_text() %>%
+      stringr::str_squish() %>%
+      as_tibble() %>%
+      purrr::set_names("team")
+    
+    teams <- teams_standings %>% 
+      bind_rows(teams_rosters) %>%
+      distinct()
+    
+    team_urls <- team_urls_standings %>%
+      bind_rows(team_urls_rosters) %>%
+      distinct()
     
     season <- stringr::str_split(season, "-", simplify = TRUE, n = 2)[,2] %>%
       stringr::str_sub(3, 4) %>%
