@@ -82,7 +82,7 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
     team_urls_rosters <- page %>% 
       rvest::html_nodes(".column-4 i+ a") %>% 
       rvest::html_attr("href") %>%
-      stringr::str_c(., season, sep = "/") %>%
+      ifelse(stringr::str_detect(., "[0-9]{4,4}-[0-9]{4,4}"), ., stringr::str_c(., season, sep = "/")) %>%
       stringr::str_c(., "?tab=stats") %>%
       as_tibble() %>%
       purrr::set_names("team_url")
@@ -95,14 +95,15 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
       purrr::set_names("team")
     
     team_urls_standings <- page %>%
-      rvest::html_nodes("#standings .txt-blue a") %>%
+      rvest::html_nodes("#standings .team a") %>%
       rvest::html_attr("href") %>%
+      ifelse(stringr::str_detect(., "[0-9]{4,4}-[0-9]{4,4}"), ., stringr::str_c(., season, sep = "/")) %>%
       stringr::str_c(., "?tab=stats") %>%
       as_tibble() %>%
       purrr::set_names("team_url")
     
     teams_standings <- page %>%
-      rvest::html_nodes("#standings .txt-blue a") %>%
+      rvest::html_nodes("#standings .team a") %>%
       rvest::html_text() %>%
       stringr::str_squish() %>%
       as_tibble() %>%
