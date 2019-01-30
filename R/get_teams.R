@@ -34,15 +34,16 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
     
   }
   
+  league <- stringr::str_replace_all(league, " ", "-")
+  season <- stringr::str_c(as.numeric(season) - 1, as.numeric(season), sep = "-")
+  
   leagues <- league %>% 
     as_tibble() %>% 
-    purrr::set_names("league") %>% 
-    mutate(league = stringr::str_replace_all(league, " ", "-"))
+    purrr::set_names("league")
   
   seasons <- season %>%
     as_tibble() %>%
-    purrr::set_names("season") %>%
-    mutate(season = stringr::str_c(season - 1, season, sep = "-"))
+    purrr::set_names("season")
   
   mydata <- tidyr::crossing(leagues, seasons)
   
@@ -83,9 +84,10 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
       rvest::html_nodes(".column-4 i+ a") %>% 
       rvest::html_attr("href") %>%
       ifelse(stringr::str_detect(., "[0-9]{4,4}-[0-9]{4,4}"), ., stringr::str_c(., season, sep = "/")) %>%
-      stringr::str_c(., "?tab=stats") %>%
+      ifelse(stringr::str_detect(., "https"), stringr::str_c(., "?tab=stats"), .) %>%
       as_tibble() %>%
-      purrr::set_names("team_url")
+      purrr::set_names("team_url") %>%
+      mutate(team_url = stringr::str_replace_all(team_url, "\\-\\-", ""))
     
     teams_rosters <- page %>%
       rvest::html_nodes(".column-4 i+ a") %>%
@@ -98,9 +100,10 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
       rvest::html_nodes("#standings .team a") %>%
       rvest::html_attr("href") %>%
       ifelse(stringr::str_detect(., "[0-9]{4,4}-[0-9]{4,4}"), ., stringr::str_c(., season, sep = "/")) %>%
-      stringr::str_c(., "?tab=stats") %>%
+      ifelse(stringr::str_detect(., "https"), stringr::str_c(., "?tab=stats"), .) %>%
       as_tibble() %>%
-      purrr::set_names("team_url")
+      purrr::set_names("team_url") %>%
+      mutate(team_url = stringr::str_replace_all(team_url, "\\-\\-", ""))
     
     teams_standings <- page %>%
       rvest::html_nodes("#standings .team a") %>%
