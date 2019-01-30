@@ -57,9 +57,9 @@ get_player_stats_team <- function(..., progress = TRUE, other = "") {
       rvest::html_table() %>%
       purrr::set_names("number", "name", "games_played", "goals", "assists", "points", "penalty_minutes", "plus_minus", "blank", "games_played_playoffs", "goals_playoffs", "assists_playoffs", "points_playoffs", "penalty_minutes_playoffs", "plus_minus_playoffs") %>%
       as_tibble() %>%
-      filter(row_number() > 1) %>%
-      filter(row_number() <= if_else(!any(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup", "Super Series", "ET", "CAN-RUS Challenge", "JCWC")), n(), which(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup", "Super Series", "ET", "CAN-RUS Challenge", "JCWC"))[1])) %>%
-      filter(!is.na(number) & name != "") %>%
+      mutate(league = ifelse(name != "" & is.na(number), name, NA)) %>% 
+      tidyr::fill(league, .direction = "down") %>% 
+      filter(!is.na(number)) %>%
       mutate(position = stringr::str_split(name, "\\(", simplify = TRUE, n = 2)[,2]) %>%
       mutate(position = stringr::str_split(position, "\\)", simplify = TRUE, n = 2)[,1]) %>%
       mutate(name = stringr::str_split(name, "\\(", simplify = TRUE, n = 2)[,1]) %>%
@@ -70,17 +70,17 @@ get_player_stats_team <- function(..., progress = TRUE, other = "") {
       mutate(goals_against_average_playoffs = NA) %>%
       mutate(save_percentage_playoffs = NA) %>%
       select(-c(blank, number)) %>%
-      select(name, position, everything()) %>%
+      select(name, position, league, everything()) %>%
       mutate_all(stringr::str_squish)
-      
+    
     goalie_stats <- page %>%
       rvest::html_node('[class="table table-striped table-sortable goalie-stats highlight-stats"]') %>%
       rvest::html_table() %>%
       purrr::set_names("number", "name", "games_played", "goals_against_average", "save_percentage", "blank", "games_played_playoffs", "goals_against_average_playoffs", "save_percentage_playoffs") %>%
       as_tibble() %>%
-      filter(row_number() > 1) %>%
-      filter(row_number() <= if_else(!any(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup", "Super Series", "ET", "CAN-RUS Challenge", "JCWC")), n(), which(is.na(number) & name %in% c("Champions HL", "M-Cup", "Swiss Cup", "Super Series", "ET", "CAN-RUS Challenge", "JCWC"))[1])) %>%
-      filter(!is.na(number) & name != "") %>%
+      mutate(league = ifelse(name != "" & is.na(number), name, NA)) %>% 
+      tidyr::fill(league, .direction = "down") %>% 
+      filter(!is.na(number)) %>%
       mutate_all(~na_if(., "-")) %>%
       mutate_all(~na_if(., "")) %>%
       mutate(position = "G") %>%
@@ -95,34 +95,23 @@ get_player_stats_team <- function(..., progress = TRUE, other = "") {
       mutate(penalty_minutes_playoffs = NA) %>%
       mutate(plus_minus_playoffs = NA) %>%
       select(-c(blank, number)) %>%
-      select(name, position, everything()) %>%
+      select(name, position, league, everything()) %>%
       mutate_all(stringr::str_squish)
     
-    league_from_team_page <- page %>%
-      rvest::html_node(".skater-stats .title a") %>%
-      rvest::html_text() %>%
-      stringr::str_squish()
-    
-    league_from_team_page_lower_case <- league_from_team_page %>%
-      tolower() %>%
-      stringr::str_replace_all(" ", "-")
-    
     skater_urls <- page %>%
-      rvest::html_nodes("#players .txt-blue a") %>%
+      rvest::html_nodes(".skater-stats td a") %>%
       rvest::html_attr("href") %>%
       as_tibble() %>%
       purrr::set_names("player_url") %>%
-      filter(row_number() > 1) %>%
-      filter(row_number() < ifelse(any(!stringr::str_detect(player_url, "player")), which(!stringr::str_detect(player_url, "player"))[1], n() + 1))
-    
+      filter(stringr::str_detect(player_url, "https\\:\\/\\/www\\.eliteprospects\\.com\\/player\\/"))
+
     goalie_urls <- page %>%
       rvest::html_nodes(".goalie-stats td a") %>%
       rvest::html_attr("href") %>%
       as_tibble() %>%
       purrr::set_names("player_url") %>%
-      filter(row_number() > 1) %>%
-      filter(row_number() < ifelse(any(!stringr::str_detect(player_url, "player")), which(!stringr::str_detect(player_url, "player"))[1], n() + 1))
-    
+      filter(stringr::str_detect(player_url, "https\\:\\/\\/www\\.eliteprospects\\.com\\/player\\/"))
+
     player_urls <- skater_urls %>% bind_rows(goalie_urls)
     
     all_data <- player_stats %>%
@@ -131,13 +120,16 @@ get_player_stats_team <- function(..., progress = TRUE, other = "") {
       mutate(team = team) %>%
       mutate(season = season) %>%
       mutate(team_url = team_url) %>%
-      mutate(.league = league) %>%
-      mutate(league = league_from_team_page) %>%
-      mutate(league_from_team_page_lower_case = league_from_team_page_lower_case) %>%
-      filter(league_from_team_page_lower_case == tolower(.league)) %>%
-      select(-c(league_from_team_page_lower_case, .league)) %>%
       mutate_at(vars(-c(name, team, league, season, position, player_url, team_url)), as.numeric) %>%
       select(name, team, league, season, everything())
+    
+    is_this_team_actually_in_this_league <- any(all_data[["league"]] == league)
+    
+    if (is_this_team_actually_in_this_league == FALSE) {
+      
+      all_data <- tibble()
+      
+    }
     
     if (progress) {pb$tick()}
     
