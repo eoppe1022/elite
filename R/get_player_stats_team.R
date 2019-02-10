@@ -101,14 +101,14 @@ get_player_stats_team <- function(..., progress = TRUE, other = "") {
     skater_urls <- page %>%
       rvest::html_nodes(".skater-stats td a") %>%
       rvest::html_attr("href") %>%
-      as_tibble() %>%
+      tibble::enframe(name = NULL) %>%
       purrr::set_names("player_url") %>%
       filter(stringr::str_detect(player_url, "https\\:\\/\\/www\\.eliteprospects\\.com\\/player\\/"))
 
     goalie_urls <- page %>%
       rvest::html_nodes(".goalie-stats td a") %>%
       rvest::html_attr("href") %>%
-      as_tibble() %>%
+      tibble::enframe(name = NULL) %>%
       purrr::set_names("player_url") %>%
       filter(stringr::str_detect(player_url, "https\\:\\/\\/www\\.eliteprospects\\.com\\/player\\/"))
 
@@ -133,9 +133,33 @@ get_player_stats_team <- function(..., progress = TRUE, other = "") {
     
     if (progress) {pb$tick()}
     
-    return(all_data)}
+    return(all_data)
+    
+  }
   
-  player_stats_team <- purrr::pmap_dfr(..., elite::persistently(.get_player_stats_team, max_attempts = 10))
+  insistently_get_player_stats_team <- purrr::insistently(.get_player_stats_team, rate = purrr::rate_delay(pause = 0.1, max_times = 10))
+  
+  try_get_player_stats_team <- function(team_url, team, league, season, ...) {
+    
+    tryCatch(insistently_get_player_stats_team(team_url, team, league, season, ...), 
+             
+             error = function(e) {
+               cat("\n\nThere's an error:\n\n", sep = "")
+               print(e)
+               cat("\nHere's where it's from:\n\nTeam:\t", team, "\nLeague:\t", league, "\nSeason:\t", season, "\nURL:\t", team_url, sep = "")
+               cat("\n")
+               tibble()},
+             
+             warning = function(w) {
+               cat("\n\nThere's a warning:\n\n", sep = "")
+               print(w)
+               cat("\nHere's where it's from:\n\nTeam:\t", team, "\nLeague:\t", league, "\nSeason:\t", season, "\nURL:\t", team_url, sep = "")
+               cat("\n")
+               tibble()})
+    
+  }
+  
+  player_stats_team <- purrr::pmap_dfr(..., try_get_player_stats_team)
   
   cat("\n")
   

@@ -54,7 +54,7 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
       all_data <- tibble(shot_handedness = NA, birth_place = NA, birth_country = NA, birthday = NA, height = NA, weight = NA, age = NA, name_ = NA, position_ = NA, player_url_ = NA)
       
       player_statistics <- NA %>% 
-        as_tibble() %>% 
+        enframe(name = NULL) %>%
         purrr::set_names("captaincy_") %>% 
         tidyr::nest()
       
@@ -91,6 +91,7 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
         stringr::str_squish() %>%
         purrr::set_names("birthday", "age", "birth_place", "birth_country", "youth_team", "position_", "height", "weight", "shot_handedness") %>%
         t() %>%
+        as.data.frame() %>%
         as_tibble() %>%
         mutate(birthday = lubridate::mdy(birthday, quiet = TRUE)) %>%
         mutate(height = stringr::str_split(height, '"', simplify = TRUE, n = 2)[,1]) %>%
@@ -105,7 +106,11 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
         mutate_all(~na_if(., "")) %>%
         select(-c(feet_tall, inches_tall, age, youth_team))
       
-      if (stringr::str_detect(vitals[["position_"]], "G")) {
+      skater_or_goalie <- page %>%
+        rvest::html_node('[class="table table-striped table-condensed table-sortable player-stats highlight-stats"]') %>%
+        rvest::html_table() 
+      
+      if ("GAA" %in% colnames(skater_or_goalie)) {
         
         player_statistics <- page %>%
           rvest::html_node('[class="table table-striped table-condensed table-sortable player-stats highlight-stats"]') %>%
@@ -140,39 +145,38 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
           mutate_at(vars(c(team_, league_, captaincy_, season_)), as.character) %>%
           mutate_at(vars(-c(team_, league_, captaincy_, season_)), as.numeric) %>%
           tidyr::nest()
-        
           
       }
       
       else {
       
-      player_statistics <- page %>%
-        rvest::html_node('[class="table table-striped table-condensed table-sortable player-stats highlight-stats"]') %>%
-        rvest::html_table() %>%
-        purrr::set_names("season_", "team_", "league_", "games_played_", "goals_", "assists_", "points_", "penalty_minutes_", "plus_minus_", "blank_", "playoffs_", "games_played_playoffs_", "goals_playoffs_", "assists_playoffs_", "points_playoffs_", "penalty_minutes_playoffs_", "plus_minus_playoffs_") %>%
-        as_tibble() %>%    
-        mutate_all(~na_if(., "-")) %>%      
-        mutate(captaincy_ = stringr::str_split(team_, "\U201C", simplify = TRUE, n = 2)[,2]) %>%
-        mutate(captaincy_ = stringr::str_split(captaincy_, "\U201D", simplify = TRUE, n = 2)[,1]) %>%
-        mutate(team_ = stringr::str_split(team_, "\U201C", simplify = TRUE, n = 2)[,1]) %>%
-        mutate(season_ = replace(season_, season_ == "", NA)) %>%
-        tidyr::fill(season_) %>%
-        mutate(season_short_ = as.numeric(stringr::str_split(season_, "-", simplify = TRUE, n = 2)[,1]) + 1) %>%
-        mutate(birthday = vitals[["birthday"]]) %>%
-        mutate(draft_eligibility_date_ = stringr::str_c(as.character(season_short_), "09-15", sep = "-")) %>%
-        mutate(age_ = elite::get_years_difference(birthday, draft_eligibility_date_)) %>%
-        mutate_all(stringr::str_squish) %>%
-        mutate_all(as.character) %>%      
-        mutate_all(~na_if(., "")) %>%
-        mutate(goals_against_average_ = NA) %>%
-        mutate(save_percentage_ = NA) %>%
-        mutate(goals_against_average_playoffs_ = NA) %>%
-        mutate(save_percentage_playoffs_ = NA) %>%
-        select(-c(blank_, playoffs_, draft_eligibility_date_, birthday)) %>%
-        select(team_, league_, captaincy_, season_, season_short_, age_, games_played_, goals_, assists_, points_, penalty_minutes_, plus_minus_, goals_against_average_, save_percentage_, games_played_playoffs_, goals_playoffs_, assists_playoffs_, points_playoffs_, penalty_minutes_playoffs_, plus_minus_playoffs_, goals_against_average_playoffs_, save_percentage_playoffs_) %>% 
-        mutate_at(vars(c(team_, league_, captaincy_, season_)), as.character) %>%
-        mutate_at(vars(-c(team_, league_, captaincy_, season_)), as.numeric) %>%
-        tidyr::nest()
+        player_statistics <- page %>%
+          rvest::html_node('[class="table table-striped table-condensed table-sortable player-stats highlight-stats"]') %>%
+          rvest::html_table() %>%
+          purrr::set_names("season_", "team_", "league_", "games_played_", "goals_", "assists_", "points_", "penalty_minutes_", "plus_minus_", "blank_", "playoffs_", "games_played_playoffs_", "goals_playoffs_", "assists_playoffs_", "points_playoffs_", "penalty_minutes_playoffs_", "plus_minus_playoffs_") %>%
+          as_tibble() %>%    
+          mutate_all(~na_if(., "-")) %>%      
+          mutate(captaincy_ = stringr::str_split(team_, "\U201C", simplify = TRUE, n = 2)[,2]) %>%
+          mutate(captaincy_ = stringr::str_split(captaincy_, "\U201D", simplify = TRUE, n = 2)[,1]) %>%
+          mutate(team_ = stringr::str_split(team_, "\U201C", simplify = TRUE, n = 2)[,1]) %>%
+          mutate(season_ = replace(season_, season_ == "", NA)) %>%
+          tidyr::fill(season_) %>%
+          mutate(season_short_ = as.numeric(stringr::str_split(season_, "-", simplify = TRUE, n = 2)[,1]) + 1) %>%
+          mutate(birthday = vitals[["birthday"]]) %>%
+          mutate(draft_eligibility_date_ = stringr::str_c(as.character(season_short_), "09-15", sep = "-")) %>%
+          mutate(age_ = elite::get_years_difference(birthday, draft_eligibility_date_)) %>%
+          mutate_all(stringr::str_squish) %>%
+          mutate_all(as.character) %>%      
+          mutate_all(~na_if(., "")) %>%
+          mutate(goals_against_average_ = NA) %>%
+          mutate(save_percentage_ = NA) %>%
+          mutate(goals_against_average_playoffs_ = NA) %>%
+          mutate(save_percentage_playoffs_ = NA) %>%
+          select(-c(blank_, playoffs_, draft_eligibility_date_, birthday)) %>%
+          select(team_, league_, captaincy_, season_, season_short_, age_, games_played_, goals_, assists_, points_, penalty_minutes_, plus_minus_, goals_against_average_, save_percentage_, games_played_playoffs_, goals_playoffs_, assists_playoffs_, points_playoffs_, penalty_minutes_playoffs_, plus_minus_playoffs_, goals_against_average_playoffs_, save_percentage_playoffs_) %>% 
+          mutate_at(vars(c(team_, league_, captaincy_, season_)), as.character) %>%
+          mutate_at(vars(-c(team_, league_, captaincy_, season_)), as.numeric) %>%
+          tidyr::nest()
       
       }
       
@@ -188,7 +192,29 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
     
   }
   
-  player_stats_individual <- purrr::pmap_dfr(..., elite::persistently(.get_player_stats_individual, max_attempts = 10))
+  insistently_get_player_stats_individual <- purrr::insistently(.get_player_stats_individual, rate = purrr::rate_delay(pause = 0.1, max_times = 10))
+  
+  try_get_player_stats_individual <- function(player_url, name, ...) {
+    
+    tryCatch(insistently_get_player_stats_individual(player_url, name, ...), 
+             
+             error = function(e) {
+               cat("\n\nThere's an error:\n\n", sep = "")
+               print(e)
+               cat("\nHere's where it's from:\n\nPlayer URL:\t", player_url, "\nName:\t", name, sep = "")
+               cat("\n")
+               tibble()},
+             
+             warning = function(w) {
+               cat("\n\nThere's a warning:\n\n", sep = "")
+               print(w)
+               cat("\nHere's where it's from:\n\nPlayer URL:\t", player_url, "\nName:\t", name, sep = "")
+               cat("\n")
+               tibble()})
+    
+  }
+  
+  player_stats_individual <- purrr::pmap_dfr(..., try_get_player_stats_individual)
 
   mydata <- player_stats_individual %>% 
     bind_cols(...)
@@ -223,12 +249,19 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
       mutate_at(vars(c(name, position, shot_handedness, birth_place, birth_country, birthday, player_url, name_, player_url_)), as.character) %>%
       mutate_at(vars(-c(name, position, shot_handedness, birth_place, birth_country, birthday, player_url, name_, player_url_, player_statistics)), as.numeric)
     
-    
   }
   
-  if (strip_redundancy & "season" %in% colnames(mydata)) {mydata <- mydata %>% select(-c(name_, position_, player_url_))}
+  if (strip_redundancy & "season" %in% colnames(mydata)) {
+    
+    mydata <- mydata %>% select(-c(name_, position_, player_url_))
+    
+    }
   
-  else if (strip_redundancy & !c("season" %in% colnames(mydata))) {mydata <- mydata %>% select(-c(name_, player_url_))}
+  else if (strip_redundancy & !c("season" %in% colnames(mydata))) {
+    
+    mydata <- mydata %>% select(-c(name_, player_url_))
+    
+    }
   
   cat("\n")
   
