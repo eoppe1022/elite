@@ -97,8 +97,8 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
         mutate(height = stringr::str_split(height, '"', simplify = TRUE, n = 2)[,1]) %>%
         mutate(feet_tall = stringr::str_split(height, "'", simplify = TRUE, n = 2)[,1]) %>%
         mutate(inches_tall = stringr::str_split(height, "'", simplify = TRUE, n = 2)[,2]) %>%
-        mutate(height = (as.numeric(feet_tall) * 12) + as.numeric(inches_tall)) %>%
-        mutate(weight = stringr::str_split(weight, "lbs", simplify = TRUE, n = 2)[,1]) %>%
+        mutate(height = ifelse(stringr::str_detect(feet_tall, "[0-9]") & stringr::str_detect(inches_tall, "[0-9]"), (as.numeric(feet_tall) * 12) + as.numeric(inches_tall), as.numeric(NA))) %>%
+        mutate(weight = ifelse(stringr::str_detect(weight, "[0-9]"), stringr::str_split(weight, "lbs", simplify = TRUE, n = 2)[,1], as.numeric(NA))) %>%
         mutate(name_ = name) %>%
         mutate(player_url_ = player_url) %>%
         mutate_all(~stringr::str_trim(., side = "both")) %>%
