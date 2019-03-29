@@ -158,7 +158,29 @@ get_drafts <- function(draft_type, draft_year, progress = TRUE, other = "",...) 
     
     return(all_data)}
     
-  draft_data <- purrr::map2_dfr(mydata[["draft_type"]], mydata[["draft_year"]], elite::persistently(.get_drafts, max_attempts = 10))
+  insistently_get_drafts <- purrr::insistently(.get_drafts, rate = purrr::rate_delay(pause = 0.1, max_times = 10))
+  
+  try_get_drafts <- function(draft_type, draft_year, ...) {
+    
+    tryCatch(insistently_get_drafts(draft_type, draft_year, ...), 
+             
+             error = function(e) {
+               cat("\n\nThere's an error:\n\n", sep = "")
+               print(e)
+               cat("\nHere's where it's from:\n\nDraft Type:\t", draft_type, "\nDraft Year:\t", draft_year, sep = "")
+               cat("\n")
+               tibble()},
+             
+             warning = function(w) {
+               cat("\n\nThere's a warning:\n\n", sep = "")
+               print(w)
+               cat("\nHere's where it's from:\n\nDraft Type:\t", draft_type, "\nDraft Year:\t", draft_year, sep = "")
+               cat("\n")
+               tibble()})
+    
+  }
+  
+  draft_data <- purrr::map2_dfr(mydata[["draft_type"]], mydata[["draft_year"]], try_get_drafts)
   
   cat("\n")
   
