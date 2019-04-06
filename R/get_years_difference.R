@@ -1,6 +1,6 @@
 #' Gets exact age
 #' 
-#' Returns the exact age of a player given his birth date and some reference date
+#' Returns the exact age of a player given his birth date and some reference date. Idea from Alex Gable (\url{https://twitter.com/gableingaround}).
 #' 
 #' @param from The start date. Typically the player's birth date.
 #' @param to The reference date. Used for finding a player's draft eligibility, it's typically \code{2018-09-15}, or whatever the year of the NHL draft is.
