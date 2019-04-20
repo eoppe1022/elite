@@ -114,10 +114,13 @@ get_teams <- function(league, season, progress = TRUE, other = "", ...) {
     
     teams <- teams_standings %>% 
       bind_rows(teams_rosters) %>%
-      distinct()
+      mutate(team_lower = tolower(team)) %>%
+      distinct(team_lower, .keep_all = TRUE) %>%
+      select(team)
     
     team_urls <- team_urls_standings %>%
       bind_rows(team_urls_rosters) %>%
+      mutate(team_url = stringr::str_replace_all(team_url, c("\\-\\/" = "/"))) %>%
       distinct()
     
     season <- stringr::str_split(season, "-", simplify = TRUE, n = 2)[,2] %>%
