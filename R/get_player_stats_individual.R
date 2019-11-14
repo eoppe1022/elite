@@ -56,7 +56,7 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
       player_statistics <- NA %>% 
         enframe(name = NULL) %>%
         purrr::set_names("captaincy_") %>% 
-        tidyr::nest()
+        tidyr::nest_legacy()
       
       all_data <- all_data %>% 
         bind_cols(player_statistics) %>% 
@@ -144,7 +144,7 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
           select(team_, league_, captaincy_, season_, season_short_, age_, games_played_, goals_, assists_, points_, penalty_minutes_, plus_minus_, goals_against_average_, save_percentage_, games_played_playoffs_, goals_playoffs_, assists_playoffs_, points_playoffs_, penalty_minutes_playoffs_, plus_minus_playoffs_, goals_against_average_playoffs_, save_percentage_playoffs_) %>% 
           mutate_at(vars(c(team_, league_, captaincy_, season_)), as.character) %>%
           mutate_at(vars(-c(team_, league_, captaincy_, season_)), as.numeric) %>%
-          tidyr::nest()
+          tidyr::nest_legacy()
           
       }
       
@@ -176,7 +176,7 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
           select(team_, league_, captaincy_, season_, season_short_, age_, games_played_, goals_, assists_, points_, penalty_minutes_, plus_minus_, goals_against_average_, save_percentage_, games_played_playoffs_, goals_playoffs_, assists_playoffs_, points_playoffs_, penalty_minutes_playoffs_, plus_minus_playoffs_, goals_against_average_playoffs_, save_percentage_playoffs_) %>% 
           mutate_at(vars(c(team_, league_, captaincy_, season_)), as.character) %>%
           mutate_at(vars(-c(team_, league_, captaincy_, season_)), as.numeric) %>%
-          tidyr::nest()
+          tidyr::nest_legacy()
       
       }
       
